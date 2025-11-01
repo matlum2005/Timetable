@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable Management System - Sunderdeep Engineering College</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #007bff;
+        }
+        .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .table-responsive {
+            border-radius: 0.375rem;
+            overflow: hidden;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-calendar-alt me-2"></i>
+                Sunderdeep Engineering College - Timetable Management
+            </a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Navigation</h5>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-outline-primary w-100 mb-2" onclick="showSection('courses')">Courses</button>
+                        <button class="btn btn-outline-primary w-100 mb-2" onclick="showSection('professors')">Professors</button>
+                        <button class="btn btn-outline-primary w-100 mb-2" onclick="showSection('rooms')">Rooms</button>
+                        <button class="btn btn-outline-primary w-100 mb-2" onclick="showSection('timeslots')">Timeslots</button>
+                        <button class="btn btn-outline-primary w-100 mb-2" onclick="showSection('programs')">Programs</button>
+                        <button class="btn btn-outline-primary w-100 mb-2" onclick="showSection('sections')">Sections</button>
+                        <button class="btn btn-outline-primary w-100 mb-2" onclick="showSection('exams')">Exams</button>
+                        <button class="btn btn-outline-primary w-100 mb-2" onclick="showSection('timetable')">Timetable</button>
+                        <button class="btn btn-success w-100 mb-2" onclick="showPdfModal('timetable')">Generate Timetable PDF</button>
+                        <button class="btn btn-success w-100" onclick="showPdfModal('exam')">Generate Exam PDF</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div id="courses-section" class="section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Courses</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="course-form" class="mb-3">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control" id="course-name" placeholder="Course Name" required>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control" id="course-code" placeholder="Course Code" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="submit" class="btn btn-primary w-100">Add</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="courses-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Code</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="professors-section" class="section" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Professors</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="professor-form" class="mb-3">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control" id="professor-name" placeholder="Professor Name" required>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control" id="professor-department" placeholder="Department" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="submit" class="btn btn-primary w-100">Add</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="professors-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Department</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="rooms-section" class="section" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Rooms</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="room-form" class="mb-3">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control" id="room-name" placeholder="Room Name" required>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="number" class="form-control" id="room-capacity" placeholder="Capacity" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="submit" class="btn btn-primary w-100">Add</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="rooms-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Capacity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="timeslots-section" class="section" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Timeslots</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="timeslot-form" class="mb-3">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <select class="form-control" id="timeslot-day" required>
+                                            <option value="">Select Day</option>
+                                            <option value="Monday">Monday</option>
+                                            <option value="Tuesday">Tuesday</option>
+                                            <option value="Wednesday">Wednesday</option>
+                                            <option value="Thursday">Thursday</option>
+                                            <option value="Friday">Friday</option>
+                                            <option value="Saturday">Saturday</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="time" class="form-control" id="timeslot-start" required>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="time" class="form-control" id="timeslot-end" required>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button type="submit" class="btn btn-primary w-100">Add</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="timeslots-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Day</th>
+                                            <th>Start Time</th>
+                                            <th>End Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="programs-section" class="section" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Programs</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="program-form" class="mb-3">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" id="program-name" placeholder="Program Name" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="submit" class="btn btn-primary w-100">Add</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="programs-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sections-section" class="section" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Sections</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="section-form" class="mb-3">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" id="section-name" placeholder="Section Name" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="submit" class="btn btn-primary w-100">Add</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="sections-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="exams-section" class="section" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Exams</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="exam-form" class="mb-3">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <select class="form-control" id="exam-course" required>
+                                            <option value="">Course</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select class="form-control" id="exam-program" required>
+                                            <option value="">Program</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select class="form-control" id="exam-section" required>
+                                            <option value="">Section</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="date" class="form-control" id="exam-date" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select class="form-control" id="exam-timeslot" required>
+                                            <option value="">Timeslot</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select class="form-control" id="exam-room" required>
+                                            <option value="">Room</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-10">
+                                        <textarea class="form-control" id="exam-seating-plan" placeholder="Seating Plan (e.g., Row 1: Seats 1-10, Row 2: Seats 11-20)" rows="3"></textarea>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="submit" class="btn btn-primary w-100">Add Exam</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="exams-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Course</th>
+                                            <th>Program</th>
+                                            <th>Section</th>
+                                            <th>Date</th>
+                                            <th>Timeslot</th>
+                                            <th>Room</th>
+                                            <th>Seating Plan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="timetable-section" class="section" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Timetable Entries</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="timetable-form" class="mb-3">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <select class="form-control" id="entry-course" required>
+                                            <option value="">Course</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select class="form-control" id="entry-professor" required>
+                                            <option value="">Professor</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select class="form-control" id="entry-room" required>
+                                            <option value="">Room</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select class="form-control" id="entry-timeslot" required>
+                                            <option value="">Timeslot</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select class="form-control" id="entry-program" required>
+                                            <option value="">Program</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select class="form-control" id="entry-section" required>
+                                            <option value="">Section</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn btn-primary w-100">Add Entry</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="timetable-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Course</th>
+                                            <th>Professor</th>
+                                            <th>Room</th>
+                                            <th>Program</th>
+                                            <th>Section</th>
+                                            <th>Day</th>
+                                            <th>Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Generation Modal -->
+    <div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pdfModalLabel">Generate PDF</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="pdf-form">
+                        <div class="mb-3">
+                            <label for="college-name" class="form-label">College Name</label>
+                            <input type="text" class="form-control" id="college-name" value="Sunderdeep Engineering College" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address</label>
+                            <input type="text" class="form-control" id="address" value="(Dasna, Ghaziabad)" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="department" class="form-label">Department</label>
+                            <input type="text" class="form-control" id="department" value="Computer Science and Engineering" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="semester" class="form-label">Semester</label>
+                            <select class="form-control" id="semester" required>
+                                <option value="1st">1st</option>
+                                <option value="2nd">2nd</option>
+                                <option value="3rd">3rd</option>
+                                <option value="4th">4th</option>
+                                <option value="5th">5th</option>
+                                <option value="6th">6th</option>
+                                <option value="7th">7th</option>
+                                <option value="8th">8th</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="year" class="form-label">Year</label>
+                            <select class="form-control" id="year" required>
+                                <option value="1st year">1st year</option>
+                                <option value="2nd year">2nd year</option>
+                                <option value="3rd year">3rd year</option>
+                                <option value="4th year">4th year</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="generate-pdf-btn">Generate PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

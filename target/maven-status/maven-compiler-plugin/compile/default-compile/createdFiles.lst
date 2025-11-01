@@ -1,0 +1,14 @@
+timetable\controller\TimetableController.class
+timetable\repository\ProfessorRepository.class
+timetable\repository\TimetableEntryRepository.class
+timetable\service\TimetableService.class
+timetable\entity\Room.class
+timetable\repository\RoomRepository.class
+timetable\entity\Course.class
+timetable\entity\TimetableEntry.class
+timetable\TimetableManagementApplication.class
+timetable\repository\TimeslotRepository.class
+timetable\service\PdfService.class
+timetable\repository\CourseRepository.class
+timetable\entity\Professor.class
+timetable\entity\Timeslot.class
